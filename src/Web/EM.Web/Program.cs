@@ -28,12 +28,14 @@ builder.Services
             options.Password.RequireLowercase = false;
         }
     })
+    .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 #endregion
 var app = builder.Build();
 
 #region Configure
 await app.MigrateDatabaseAsync();
+await app.SeedDatabaseAsync();
 
 if (!app.Environment.IsDevelopment())
 {
