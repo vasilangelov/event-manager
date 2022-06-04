@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using EM.Common;
     using EM.Data.Models;
     using EM.Data.Seeding.Abstractions;
 
@@ -14,7 +15,7 @@
 
         private static readonly IEnumerable<UserInfo> usersInfo = new UserInfo[]
         {
-            new UserInfo("admin", "admin@example.com", "admin123", "Admin" ),
+            new UserInfo("admin", "admin@example.com", "admin123", RoleConstants.Admin ),
             new UserInfo("user", "user@example.com", "user123"),
         };
 

@@ -12,6 +12,8 @@
         {
         }
 
+        public DbSet<Venue> Venues { get; set; } = default!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
