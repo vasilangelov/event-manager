@@ -31,12 +31,13 @@ builder.Services
     .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 #endregion
+
 var app = builder.Build();
 
-#region Configure
 await app.MigrateDatabaseAsync();
 await app.SeedDatabaseAsync();
 
+#region Configure
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

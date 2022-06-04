@@ -14,8 +14,8 @@
 
         private static readonly IEnumerable<UserInfo> usersInfo = new UserInfo[]
         {
-            new UserInfo("admin@example.com", "admin@example.com", "admin123", "Admin" ),
-            new UserInfo("user@example.com", "user@example.com", "user123"),
+            new UserInfo("admin", "admin@example.com", "admin123", "Admin" ),
+            new UserInfo("user", "user@example.com", "user123"),
         };
 
         private record class UserInfo(string Username, string Email, string Password, params string[] Roles);
