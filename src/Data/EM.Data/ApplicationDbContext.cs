@@ -12,10 +12,14 @@
         {
         }
 
+        public DbSet<City> Cities { get; set; } = default!;
+
         public DbSet<Venue> Venues { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
             base.OnModelCreating(builder);
         }
     }

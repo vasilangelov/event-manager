@@ -1,6 +1,11 @@
 using EM.Data;
+using EM.Data.Infrastructure.Repositories;
+using EM.Data.Infrastructure.Repositories.EntityFramework;
 using EM.Data.Models;
+using EM.Services;
+using EM.Services.Mapping;
 using EM.Web.Extensions;
+using EM.Web.Models.ViewModels;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +35,14 @@ builder.Services
     })
     .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
+
+builder.Services.AddAutoMapper(typeof(ErrorViewModel).Assembly);
+
+builder.Services.AddCloudinary(builder.Configuration);
+
+builder.Services.AddServiceLayer();
 #endregion
 
 var app = builder.Build();
@@ -55,7 +68,8 @@ app.UseAuthorization();
 
 app.UseEndpoints(routeBuilder =>
 {
-    routeBuilder.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+    routeBuilder.MapControllerRoute("area", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    routeBuilder.MapDefaultControllerRoute();
 
     routeBuilder.MapRazorPages();
 });

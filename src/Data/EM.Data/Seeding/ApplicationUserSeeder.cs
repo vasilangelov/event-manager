@@ -2,12 +2,13 @@
 {
     using System.Threading.Tasks;
 
-    using EM.Common;
     using EM.Data.Models;
     using EM.Data.Seeding.Abstractions;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+
+    using static EM.Common.RoleConstants;
 
     public class ApplicationUserSeeder : ISeeder
     {
@@ -15,7 +16,7 @@
 
         private static readonly IEnumerable<UserInfo> usersInfo = new UserInfo[]
         {
-            new UserInfo("admin", "admin@example.com", "admin123", RoleConstants.Admin ),
+            new UserInfo("admin", "admin@example.com", "admin123", Admin ),
             new UserInfo("user", "user@example.com", "user123"),
         };
 

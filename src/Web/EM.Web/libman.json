@@ -17,6 +17,11 @@
     {
       "library": "jquery-validation-unobtrusive@3.2.12",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "rxjs@7.5.5",
+      "destination": "wwwroot/lib/rxjs/",
+      "files": [ "dist/bundles/rxjs.umd.min.js" ]
     }
   ]
 }

@@ -1,34 +1,30 @@
-﻿using System.Diagnostics;
-
-using EM.Web.Models;
-
-using Microsoft.AspNetCore.Mvc;
-
-namespace EM.Web.Controllers
+﻿namespace EM.Web.Controllers
 {
+    using System.Diagnostics;
+
+    using EM.Web.Models.ViewModels;
+
+    using Microsoft.AspNetCore.Mvc;
+
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
+        [HttpGet]
         public IActionResult Privacy()
         {
-            return View();
+            return this.View();
         }
 
+        [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -1,0 +1,109 @@
+﻿@model VenueInputModel
+
+@{
+    ViewData["Title"] = "Add Venue";
+}
+
+<h1 class="text-center">Add Venue</h1>
+
+<form id="venueForm" class="col-6 mx-auto" asp-area="Admin" asp-controller="Venue" asp-action="Add" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input class="form-control" asp-for="Name" />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input class="form-control" asp-for="Address" />
+        <span class="text-danger" asp-validation-for="Address"></span>
+    </div>
+    <div class="mb-3 position-relative">
+        <label asp-for="City" class="form-label"></label>
+        <input id="cityInput" class="form-control" asp-for="City" autocomplete="off" />
+        <div id="cityRecommendations" hidden class="list-group position-absolute w-100"></div>
+        <span class="text-danger" asp-validation-for="City"></span>
+    </div>
+    <div class="mb-3">
+        <img id="imagePreview" class="container-fluid my-2" hidden style="aspect-ratio: 16 / 9;" />
+        <label asp-for="Image" class="form-label"></label>
+        <input id="imageInput" class="form-control" asp-for="Image" />
+        <span class="text-danger" asp-validation-for="Image"></span>
+        <div class="form-text">To display your image properly, please assure its aspect ratio is 16/9.</div>
+    </div>
+    <div class="d-flex justify-content-center gap-2">
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>
+
+@section Scripts {
+<partial resource="" name="/Views/Shared/_ValidationScriptsPartial.cshtml" />
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageInput.addEventListener('input', (e) => {
+        imagePreview.hidden = false;
+
+        const [image] = e.target.files;
+
+        imagePreview.src = URL.createObjectURL(image);
+    });
+</script>
+
+<script src="~/lib/rxjs/dist/bundles/rxjs.umd.min.js" asp-append-version="true"></script>
+
+<script>
+    const { fromEvent, auditTime, map, filter } = rxjs;
+
+    const cityInput = document.getElementById('cityInput');
+    const recommendations = document.getElementById('cityRecommendations');
+
+    const apiEndpoint = 'https://localhost:7190/api/cities/find/';
+
+    fromEvent(cityInput, 'input')
+        .pipe(
+            auditTime(1000),
+            map((e) => e.target.value),
+            filter((v) => !!v),
+        ).subscribe({
+            next: (v) => {
+                fetch(apiEndpoint + v)
+                    .then(r => r.json())
+                    .then((r) => {
+                        recommendations.innerHTML = '';
+                        if (!Array.isArray(r) || r.length === 0) {
+                            recommendations.hidden = true;
+
+                            return;
+                        }
+
+                        for (const value of r) {
+                            recommendations.appendChild(el('button', {
+                                className: 'list-group-item list-group-item-action',
+                                textContent: value
+                            }, {
+                                'data-recommendation': value,
+                            }));
+                        }
+
+                        recommendations.hidden = false;
+                    });
+            },
+        });
+
+    document.body.addEventListener('click', (e) => {
+        const v = e.target.dataset.recommendation;
+
+        if (typeof(v) === 'string' && v !== '') {
+            cityInput.value = v;
+
+            recommendations.innerHTML = '';
+            recommendations.hidden = true;
+            
+            $("#venueForm").validate().element("#cityInput");
+        }
+    });
+</script>
+}

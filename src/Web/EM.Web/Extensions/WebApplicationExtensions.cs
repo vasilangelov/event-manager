@@ -29,6 +29,7 @@
             {
                 typeof(ApplicationRoleSeeder),
                 typeof(ApplicationUserSeeder),
+                typeof(CitySeeder),
             };
 
             EnsureAllSeedersInheritFromBase(seederTypes);

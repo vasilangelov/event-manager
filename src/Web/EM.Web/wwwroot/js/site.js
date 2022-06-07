@@ -1,4 +1,15 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function el(name, properties, customProperties) {
+    const e = document.createElement(name);
 
-// Write your JavaScript code.
+    if (typeof properties === "object") {
+        Object.assign(e, properties);
+    }
+
+    if (typeof customProperties === 'object') {
+        Object.entries(customProperties).forEach(([key, value]) => {
+            e.setAttribute(key, value);
+        });
+    }
+
+    return e;
+}

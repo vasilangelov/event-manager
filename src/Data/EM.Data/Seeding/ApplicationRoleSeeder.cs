@@ -7,10 +7,12 @@
     using EM.Data.Seeding.Abstractions;
 
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     public class ApplicationRoleSeeder : ISeeder
     {
         private const string InvalidRoleStructureExceptionMessage = "Type {0} must contain only string constants.";
+        private const BindingFlags RolePropertySelector = BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly;
 
         private readonly RoleManager<ApplicationRole> roleManager;
 
@@ -21,8 +23,15 @@
 
         public async Task SeedAsync()
         {
+            var rolesExist = await this.roleManager.Roles.AnyAsync();
+
+            if (rolesExist)
+            {
+                return;
+            }
+
             var roleNames = typeof(RoleConstants)
-                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                .GetFields(RolePropertySelector)
                 .Select(x =>
                 x.GetRawConstantValue() as string ??
                     throw new InvalidOperationException(string.Format(InvalidRoleStructureExceptionMessage, nameof(RoleConstants))))
@@ -30,17 +39,12 @@
 
             foreach (var roleName in roleNames)
             {
-                bool roleExists = await this.roleManager.RoleExistsAsync(roleName);
-
-                if (!roleExists)
+                ApplicationRole role = new()
                 {
-                    ApplicationRole role = new()
-                    {
-                        Name = roleName,
-                    };
+                    Name = roleName,
+                };
 
-                    await this.roleManager.CreateAsync(role);
-                }
+                await this.roleManager.CreateAsync(role);
             }
         }
     }
