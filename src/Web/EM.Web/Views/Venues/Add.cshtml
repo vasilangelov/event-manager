@@ -1,4 +1,6 @@
-﻿@model VenueInputModel
+﻿@using EM.Web.Models.InputModels.Venues
+
+@model VenueInputModel
 
 @{
     ViewData["Title"] = "Add Venue";
@@ -6,7 +8,7 @@
 
 <h1 class="text-center">Add Venue</h1>
 
-<form id="venueForm" class="col-6 mx-auto" asp-area="Admin" asp-controller="Venue" asp-action="Add" method="post" enctype="multipart/form-data">
+<form id="venueForm" class="col-6 mx-auto" asp-controller="Venues" asp-action="Add" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly"></div>
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
@@ -19,10 +21,10 @@
         <span class="text-danger" asp-validation-for="Address"></span>
     </div>
     <div class="mb-3 position-relative">
-        <label asp-for="City" class="form-label"></label>
-        <input id="cityInput" class="form-control" asp-for="City" autocomplete="off" />
+        <label asp-for="CityName" class="form-label"></label>
+        <input id="cityInput" class="form-control" asp-for="CityName" autocomplete="off" />
         <div id="cityRecommendations" hidden class="list-group position-absolute w-100"></div>
-        <span class="text-danger" asp-validation-for="City"></span>
+        <span class="text-danger" asp-validation-for="CityName"></span>
     </div>
     <div class="mb-3">
         <img id="imagePreview" class="container-fluid my-2" hidden style="aspect-ratio: 16 / 9;" />
@@ -37,11 +39,11 @@
 </form>
 
 @section Scripts {
-<partial resource="" name="/Views/Shared/_ValidationScriptsPartial.cshtml" />
+<partial name="/Views/Shared/_ValidationScriptsPartial.cshtml" />
 
 <script>
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
+    const imageInput = id('imageInput');
+    const imagePreview = id('imagePreview');
 
     imageInput.addEventListener('input', (e) => {
         imagePreview.hidden = false;
@@ -64,13 +66,19 @@
 
     fromEvent(cityInput, 'input')
         .pipe(
-            auditTime(1000),
+            auditTime(500),
             map((e) => e.target.value),
-            filter((v) => !!v),
         ).subscribe({
             next: (v) => {
                 fetch(apiEndpoint + v)
-                    .then(r => r.json())
+                    .then(r => {
+                        if (r.ok) {
+                            return r.json();
+                        }
+
+                        recommendations.innerHTML = '';
+                        recommendations.hidden = true;
+                    })
                     .then((r) => {
                         recommendations.innerHTML = '';
                         if (!Array.isArray(r) || r.length === 0) {
@@ -101,7 +109,7 @@
 
             recommendations.innerHTML = '';
             recommendations.hidden = true;
-            
+
             $("#venueForm").validate().element("#cityInput");
         }
     });

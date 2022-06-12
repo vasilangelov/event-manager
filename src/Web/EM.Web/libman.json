@@ -19,6 +19,12 @@
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
     },
     {
+      "provider": "unpkg",
+      "library": "font-awesome-5-css@5.4.1",
+      "destination": "wwwroot/lib/fontawesome",
+      "files": [ "css/all.min.css", "webfonts/*" ]
+    },
+    {
       "library": "rxjs@7.5.5",
       "destination": "wwwroot/lib/rxjs/",
       "files": [ "dist/bundles/rxjs.umd.min.js" ]

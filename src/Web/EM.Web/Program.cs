@@ -68,7 +68,6 @@ app.UseAuthorization();
 
 app.UseEndpoints(routeBuilder =>
 {
-    routeBuilder.MapControllerRoute("area", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
     routeBuilder.MapDefaultControllerRoute();
 
     routeBuilder.MapRazorPages();

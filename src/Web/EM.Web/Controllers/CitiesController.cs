@@ -9,7 +9,6 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = Admin)]
     public class CitiesController : ControllerBase
     {
         private readonly ICityService cityService;
@@ -19,7 +18,8 @@
             this.cityService = cityService;
         }
 
-        [HttpGet("Find/{input}")]
+        [HttpGet("{action}/{input}")]
+        [Authorize(Roles = Admin)]
         public async Task<IActionResult> Find(string input)
         {
             var model = await this.cityService.GetSimilarCityNames(input, 5);

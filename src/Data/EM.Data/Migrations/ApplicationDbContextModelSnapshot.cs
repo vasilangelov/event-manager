@@ -127,19 +127,101 @@ namespace EM.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+                    b.Property<Guid>("VenueId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("VenueId");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<short>("Count")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.TicketPurchase", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<short>("Amount")
+                        .HasColumnType("smallint");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
+                    b.HasKey("UserId", "TicketId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketPurchases");
                 });
 
             modelBuilder.Entity("EM.Data.Models.Venue", b =>
@@ -164,11 +246,14 @@ namespace EM.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(30)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Venues");
                 });
@@ -280,6 +365,47 @@ namespace EM.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("EM.Data.Models.Event", b =>
+                {
+                    b.HasOne("EM.Data.Models.Venue", "Venue")
+                        .WithMany("Events")
+                        .HasForeignKey("VenueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Venue");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.Ticket", b =>
+                {
+                    b.HasOne("EM.Data.Models.Event", "Event")
+                        .WithMany("Tickets")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.TicketPurchase", b =>
+                {
+                    b.HasOne("EM.Data.Models.Ticket", "Ticket")
+                        .WithMany("TicketPurchases")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EM.Data.Models.ApplicationUser", "User")
+                        .WithMany("TicketPurchases")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EM.Data.Models.Venue", b =>
                 {
                     b.HasOne("EM.Data.Models.City", "City")
@@ -342,9 +468,29 @@ namespace EM.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("EM.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("TicketPurchases");
+                });
+
             modelBuilder.Entity("EM.Data.Models.City", b =>
                 {
                     b.Navigation("Venues");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.Event", b =>
+                {
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.Ticket", b =>
+                {
+                    b.Navigation("TicketPurchases");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.Venue", b =>
+                {
+                    b.Navigation("Events");
                 });
 #pragma warning restore 612, 618
         }

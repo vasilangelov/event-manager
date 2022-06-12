@@ -1,12 +1,6 @@
 ﻿namespace EM.Services.Cities
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
-    using EM.Data.Infrastructure.Repositories;
-    using EM.Data.Models;
-
-    using Microsoft.EntityFrameworkCore;
+    using static EM.Common.GlobalConstants;
 
     [TransientService]
     public class CityService : ICityService
@@ -22,7 +16,7 @@
         {
             int? id = await this.cityRepository
                                     .AllAsNoTracking()
-                                    .Where(x => x.NormalizedName == name.ToUpper())
+                                    .Where(x => x.Name == name)
                                     .Select<City, int?>(x => x.Id)
                                     .FirstOrDefaultAsync();
 
@@ -37,7 +31,7 @@
         public async Task<IEnumerable<string>> GetSimilarCityNames(string name, int maxResults)
             => await this.cityRepository
                             .AllAsNoTracking()
-                            .Where(x => x.NormalizedName.StartsWith(name.ToUpper()))
+                            .Where(x => x.Name.StartsWith(name))
                             .Take(maxResults)
                             .Select(x => x.Name)
                             .ToArrayAsync();
@@ -47,7 +41,6 @@
             var city = new City
             {
                 Name = name,
-                NormalizedName = name.ToUpper(),
             };
 
             await this.cityRepository.AddAsync(city);

@@ -1,0 +1,82 @@
+﻿@using EM.Web.Models.ViewModels.Events
+
+@model PaginationViewModel<EventListViewModel>
+
+@{
+    ViewData["Title"] = "Event List";
+}
+
+<h1 class="text-center">Event List</h1>
+
+<form class="col-12 col-md-6 mx-auto" asp-controller="Events" asp-action="All" asp-route-perPage="@Model.ItemsPerPage" method="get">
+    <div class="col-md-6 mx-auto input-group">
+        <input class="form-control" placeholder="Search by name, place or city..." type="text" name="searchQuery" value="@ViewData["SearchQuery"]" />
+        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+    </div>
+</form>
+
+<div class="container my-3 p-0">
+    @if (Model.Items.Any())
+    {
+        @foreach (var eventModel in Model.Items)
+        {
+            <div class="card mb-3 col-md-9 mx-auto">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="@eventModel.ImageUrl" alt="@eventModel.Name" class="img-fluid rounded-start">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body d-flex flex-column justify-content-center h-100 gap-1 py-0">
+                            <h3 class="card-title">@eventModel.Name</h3>
+                            <div class="card-text">
+                                <div><i class="fas fa-clock"></i> <span data-date-culture="en-US" data-date-style="full" data-date-display="@eventModel.EventDate.ToString("O")"></span></div>
+                                <div><i class="fas fa-map-marker-alt"></i> @eventModel.VenueName, @eventModel.VenueAddress, @eventModel.VenueCityName</div>
+                            </div>
+                            <a class="btn btn-primary w-fit-content" asp-controller="Events" asp-action="Details" asp-route-id="@eventModel.Id">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="fw-bold text-center">Sorry, no results found...</p>
+    }
+</div>
+
+<nav aria-label="Event pagination">
+    <ul class="pagination justify-content-center">
+        @{
+            Model.DisplayPageCount = Math.Min(Model.DisplayPageCount, Model.PageCount);
+
+            var middle = (Model.DisplayPageCount + 1) / 2;
+
+            var startIndex = Math.Max(1, Model.CurrentPage - middle);
+            var endIndex = Math.Min(Model.PageCount, Model.CurrentPage + middle);
+        }
+
+        @for (int pageIndex = startIndex; pageIndex <= endIndex; pageIndex++)
+        {
+            @if (pageIndex == Model.CurrentPage)
+            {
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">@pageIndex</span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link"
+               asp-controller="Events"
+               asp-action="All"
+               asp-route-page="@pageIndex"
+               asp-route-perPage="@Model.ItemsPerPage"
+               asp-route-name="@ViewData["SearchQuery"]">
+                        @pageIndex
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</nav>

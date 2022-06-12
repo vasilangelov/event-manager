@@ -1,11 +1,11 @@
-﻿@inject SignInManager<ApplicationUser> SignInManager
+﻿@using EM.Common;
 
-@if (SignInManager.IsSignedIn(User))
+@if (User.Identity?.IsAuthenticated == true)
 {
     @if (User.IsInRole(RoleConstants.Admin))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin Panel</a>
+            <a class="nav-link text-dark" asp-controller="Venues" asp-action="Add">Add a venue</a>
         </li>
     }
 }

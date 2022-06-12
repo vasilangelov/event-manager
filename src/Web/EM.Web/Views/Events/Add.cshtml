@@ -1,0 +1,215 @@
+﻿@using EM.Web.Models.InputModels.Events
+
+@model EventInputModel
+
+@{
+    ViewData["Title"] = "Add Event";
+}
+
+<h1 class="text-center">Add Event</h1>
+
+<form class="col-6 mx-auto" asp-controller="Events" asp-action="Add" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <fieldset class="mb-3">
+        <legend>Event</legend>
+        <div class="mb-3">
+            <label class="form-label" asp-for="Name"></label>
+            <input class="form-control" asp-for="Name" />
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="EventDate"></label>
+            <input class="form-control" asp-for="EventDate" />
+            <span class="text-danger" asp-validation-for="EventDate"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="AdditionalInfo"></label>
+            <textarea class="form-control" asp-for="AdditionalInfo"></textarea>
+            <span class="text-danger" asp-validation-for="AdditionalInfo"></span>
+        </div>
+        <div class="mb-3">
+            <img id="imagePreview" class="container-fluid my-2" hidden style="aspect-ratio: 16 / 9;" />
+            <label asp-for="Image" class="form-label"></label>
+            <input id="imageInput" class="form-control" asp-for="Image" />
+            <span class="text-danger" asp-validation-for="Image"></span>
+            <div class="form-text">To display your image properly, please assure its aspect ratio is 16/9.</div>
+        </div>
+        <input asp-for="VenueId" hidden />
+    </fieldset>
+
+    <fieldset class="mb-3">
+        <div class="row">
+            <legend class="col-md-9">Tickets</legend>
+            <button id="addRowBtn" type="button" class="col-md-3 btn btn-success"><i class="fas fa-plus"></i> Add Row</button>
+        </div>
+
+        <div id="ticketsContainer">
+            <template id="ticketsTemplate">
+                @for (int i = 0; i < 1; i++)
+                {
+                    <div data-row-id="@i" class="row">
+                        <div class="col-md-5">
+                            <label class="form-label" asp-for="Tickets[i].Type"></label>
+                            <input class="form-control" asp-for="Tickets[i].Type" />
+                            <span class="text-danger" asp-validation-for="Tickets[i].Type"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" asp-for="Tickets[i].Count"></label>
+                            <input class="form-control" asp-for="Tickets[i].Count" />
+                            <span class="text-danger" asp-validation-for="Tickets[i].Count"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" asp-for="Tickets[i].Price"></label>
+                            <input class="form-control" asp-for="Tickets[i].Price" />
+                            <span class="text-danger" asp-validation-for="Tickets[i].Price"></span>
+                        </div>
+
+                        <div class="col-md-1">
+                            <label class="form-label">Delete</label>
+                            <button data-action="removeRow" data-target-id="@i" type="button" disabled class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </template>
+
+            @for (int i = 0; i < Model.Tickets.Length; i++)
+            {
+                <div data-row-id="@i" class="row">
+                    <div class="col-md-5">
+                        <label class="form-label" asp-for="Tickets[i].Type"></label>
+                        <input class="form-control" asp-for="Tickets[i].Type" />
+                        <span class="text-danger" asp-validation-for="Tickets[i].Type"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" asp-for="Tickets[i].Count"></label>
+                        <input class="form-control" asp-for="Tickets[i].Count" />
+                        <span class="text-danger" asp-validation-for="Tickets[i].Count"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" asp-for="Tickets[i].Price"></label>
+                        <input class="form-control" asp-for="Tickets[i].Price" />
+                        <span class="text-danger" asp-validation-for="Tickets[i].Price"></span>
+                    </div>
+
+                    <div class="col-md-1">
+                        <label class="form-label">Delete</label>
+                        <button data-action="removeRow" data-target-id="@i" type="button" disabled class="btn btn-danger">
+                            <i style="pointer-events: none;" class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <div class="d-flex justify-content-center gap-2">
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>
+
+@section Scripts {
+<partial name="/Views/Shared/_ValidationScriptsPartial.cshtml" />
+
+<script>
+    const imageInput = id('imageInput');
+    const imagePreview = id('imagePreview');
+
+    imageInput.addEventListener('input', (e) => {
+        imagePreview.hidden = false;
+
+        const [image] = e.target.files;
+
+        imagePreview.src = URL.createObjectURL(image);
+    });
+</script>
+
+<script>
+    const generateField = (() => {
+        const template = id('ticketsTemplate');
+
+        return (index) => {
+            const row = template.content.cloneNode(true).querySelector('div[data-row-id]');
+
+            changeRowData(row, index);
+
+            return row;
+        }
+    })();
+
+    function changeRowData(row, index) {
+        row.querySelectorAll('label[for]')
+                .forEach(l => {
+                    l.htmlFor = l.htmlFor.replace(/\d+/, index);
+                });
+
+        row.querySelectorAll('input')
+                .forEach(i => {
+                    i.value = '';
+                });
+
+        row.querySelectorAll('input[id]')
+                .forEach(i => {
+                    i.id = i.id.replace(/\d+/, index);
+                });
+
+        row.querySelectorAll('input[name]')
+                .forEach(i => {
+                    i.name = i.name.replace(/\d+/, index);
+                });
+
+        row.querySelectorAll('span[data-valmsg-for]')
+                .forEach(s => {
+                    s.dataset.valmsgFor = s.dataset.valmsgFor.replace(/\d+/, index);
+                });
+
+        row.dataset.rowId = index;
+        row.querySelector('button[data-action=removeRow]').dataset.targetId = index;
+    }
+
+    const ticketsContainer = id('ticketsContainer');
+    let rowsCount = @Model.Tickets.Count();
+
+    id('addRowBtn').addEventListener('click', () => {
+        ticketsContainer.appendChild(generateField(rowsCount));
+        rowsCount++;
+
+        if (rowsCount > 1) {
+            ticketsContainer
+                .querySelectorAll('button[data-action=removeRow]')
+                .forEach(btn => {
+                    btn.disabled = false;
+                });
+        }
+    });
+
+    document.body.addEventListener('click', (e) => {
+        const action = e.target.dataset.action;
+
+        if (action === 'removeRow') {
+            const rowId = e.target.dataset.targetId;
+
+            const rowToRemove = document.body.querySelector(`div[data-row-id="${rowId}"]`);
+
+            ticketsContainer.removeChild(rowToRemove);
+
+            rowsCount--;
+
+            if (rowsCount <= 1) {
+            ticketsContainer
+                .querySelectorAll('button[data-action=removeRow]')
+                .forEach(btn => {
+                    btn.disabled = true;
+                });
+            }
+
+            for (let i = Number(rowId); i < rowsCount; i++) {
+                const row = document.body.querySelector(`div[data-row-id="${i + 1}"]`);
+                changeRowData(row, i);
+            }
+        }
+    });
+</script>
+}

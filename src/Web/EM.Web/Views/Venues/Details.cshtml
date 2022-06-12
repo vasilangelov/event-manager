@@ -1,0 +1,53 @@
+﻿@using EM.Web.Models.ViewModels.Venues
+
+@model VenueDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="row container-fluid bg-primary text-white my-3 p-4">
+    <div class="col-md-6 d-flex flex-column justify-content-center gap-3">
+        <h1>@Model.Name</h1>
+        <div class="d-flex flex-column gap-2">
+            <div aria-label="location">
+                <i class="fas fa-map-marker-alt"></i>
+                @Model.Address, @Model.CityName
+            </div>
+        </div>
+        @if (User.IsInRole(RoleConstants.Admin))
+        {
+            <a class="btn btn-light w-fit-content" asp-controller="Events" asp-action="Add" asp-route-id="@Model.Id">
+                <i class="fas fa-plus"></i>
+                Add event
+            </a>
+        }
+    </div>
+    <div class="col-md-6 text-end">
+        <img src="@Model.ImageUrl" alt="@Model.Name" class="w-50" />
+    </div>
+</div>
+
+<section class="my-3">
+    <h2 class="text-center">Upcoming events</h2>
+
+    <div class="container">
+        @if (Model.UpcomingEvents.Any())
+        {
+            @foreach (var eventModel in Model.UpcomingEvents)
+            {
+                <div class="card row col-12 col-md-8 mx-auto my-3">
+                    <div class="card-body d-flex flex-column flex-lg-row justify-content-center align-items-center align-items-lg-baseline gap-lg-5">
+                        <div><i class="fas fa-calendar-check"></i> @eventModel.Name</div>
+                        <div><i class="fas fa-clock"></i> <span data-date-style="full" data-date-display="@eventModel.EventDate.ToString("O")"></span></div>
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@eventModel.Id" class="btn btn-primary">See more</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-center fs-4">There are no upcoming events happening on this venue... yet.</p>
+        }
+    </div>
+</section>

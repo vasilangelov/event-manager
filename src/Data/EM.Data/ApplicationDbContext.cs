@@ -16,6 +16,12 @@
 
         public DbSet<Venue> Venues { get; set; } = default!;
 
+        public DbSet<Event> Events { get; set; } = default!;
+
+        public DbSet<Ticket> Tickets { get; set; } = default!;
+
+        public DbSet<TicketPurchase> TicketPurchases { get; set; } = default!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);

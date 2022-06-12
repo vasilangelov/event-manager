@@ -1,4 +1,4 @@
-﻿namespace EM.Services.Mapping
+﻿namespace EM.Services.Mapping.Core
 {
     using AutoMapper;
 

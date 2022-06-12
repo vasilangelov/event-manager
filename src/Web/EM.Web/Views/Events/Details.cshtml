@@ -1,0 +1,72 @@
+﻿@using EM.Web.Models.ViewModels.Events
+
+@model EventDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Name} at {Model.Venue.Name}";
+}
+
+<div class="row container-fluid bg-primary text-white my-3 p-4">
+    <div class="col-md-6 d-flex flex-column justify-content-center gap-3">
+        <h1>@Model.Name</h1>
+        <div class="d-flex flex-column gap-2">
+            <div aria-label="date">
+                <i class="fas fa-clock"></i>
+                <span data-date-culture="en-US" data-date-style="full" data-date-display="@Model.EventDate.ToString("O")"></span>
+            </div>
+            <div aria-label="location">
+                <i class="fas fa-map-marker-alt"></i>
+                @Model.Venue.Name, @Model.Venue.Address, @Model.Venue.CityName
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 text-end">
+        <img src="@Model.ImageUrl" alt="@Model.Name" class="w-50" />
+    </div>
+</div>
+
+<section class="my-3">
+    <h2 class="text-center">Tickets</h2>
+
+    <div class="container">
+        @foreach (var ticket in Model.Tickets)
+        {
+            <div class="card row col-12 col-md-6 mx-auto my-3">
+                <div class="card-body d-flex justify-content-between align-items-baseline">
+                    <div><i class="fas fa-ticket-alt mx-1"></i> @ticket.Type</div>
+                    <div>
+                        <span>Places Left: @ticket.Count</span>
+                        <span><i class="fas fa-dollar-sign"></i> @ticket.Price.ToString("0.00")</span>
+                    </div>
+                    <a class="btn btn-primary">Buy now!</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<div class="w-75 mx-auto my-3">
+    @if (Model.AdditionalInfo is not null)
+    {
+        <article>
+            <h2 class="text-center">Additional info</h2>
+            <p>@Model.AdditionalInfo</p>
+        </article>
+    }
+    <article>
+        <h2 class="text-center">About the palce</h2>
+        <div class="row bg-secondary text-light my-2 p-3">
+            <div class="col-md-6 d-flex flex-column justify-content-center gap-3">
+                <div aria-label="venue" class="fs-3">@Model.Venue.Name</div>
+                <div aria-label="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    @Model.Venue.Address, @Model.Venue.CityName
+                </div>
+                <a class="btn btn-primary w-fit-content" asp-controller="Venues" asp-action="Details" asp-route-id="@Model.Venue.Id">See more</a>
+            </div>
+            <div class="col-md-6 text-end">
+                <img src="@Model.Venue.ImageUrl" alt="@Model.Venue.Name" class="w-75" />
+            </div>
+        </div>
+    </article>
+</div>

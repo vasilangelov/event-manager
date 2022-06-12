@@ -38,7 +38,6 @@
                             .Select(name => new City
                             {
                                 Name = name,
-                                NormalizedName = name.ToUpper(),
                             })
                             .ToArray();
 

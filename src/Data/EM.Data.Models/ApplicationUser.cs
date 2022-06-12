@@ -4,5 +4,7 @@
 
     public class ApplicationUser : IdentityUser<Guid>
     {
+        public virtual ICollection<TicketPurchase> TicketPurchases { get; set; }
+            = new HashSet<TicketPurchase>();
     }
 }

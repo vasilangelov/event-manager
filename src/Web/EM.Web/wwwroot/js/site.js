@@ -13,3 +13,7 @@
 
     return e;
 }
+
+function id(i) {
+    return document.getElementById(i);
+}
