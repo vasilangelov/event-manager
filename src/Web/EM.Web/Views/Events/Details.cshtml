@@ -1,4 +1,5 @@
-﻿@using EM.Web.Models.ViewModels.Events
+﻿@using EM.Web.Models.InputModels.Tickets
+@using EM.Web.Models.ViewModels.Events
 
 @model EventDetailsViewModel
 
@@ -25,23 +26,43 @@
     </div>
 </div>
 
-<section class="my-3">
+<section class="col-9 my-3 mx-auto">
     <h2 class="text-center">Tickets</h2>
 
     <div class="container">
-        @foreach (var ticket in Model.Tickets)
-        {
-            <div class="card row col-12 col-md-6 mx-auto my-3">
-                <div class="card-body d-flex justify-content-between align-items-baseline">
-                    <div><i class="fas fa-ticket-alt mx-1"></i> @ticket.Type</div>
-                    <div>
-                        <span>Places Left: @ticket.Count</span>
-                        <span><i class="fas fa-dollar-sign"></i> @ticket.Price.ToString("0.00")</span>
-                    </div>
-                    <a class="btn btn-primary">Buy now!</a>
-                </div>
+        <div class="row">
+            <div class="col-md-8 fs-4">Select the count of tickets and choose ticket type...</div>
+            <div class="col-md-4 d-flex justify-content-end align-items-baseline gap-3 p-0">
+                <button id="decrementQuantityBtn" disabled class="btn btn-primary"><i class="fas fa-minus"></i></button>
+                <span id="ticketQuantity"></span>
+                <button id="incrementQuantityBtn" class="btn btn-primary"><i class="fas fa-plus"></i></button>
             </div>
-        }
+        </div>
+        <div class="row mt-3">
+            @foreach (var ticket in Model.Tickets)
+            {
+                <div class="border-top-1 border-top py-3 row">
+                    <div class="col-6"><i class="fas fa-ticket-alt"></i> @ticket.Type - @ticket.Count left</div>
+                    <div class="col-6 text-end">
+                        @ticket.Price.ToString("F2")
+                        <input class="ms-3 input-radio" data-action="selectTicket" data-ticket-price="@ticket.Price" name="ticketId" value="@ticket.Id" type="radio" />
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row mt-3">
+            <form asp-controller="Cart" asp-action="Add" method="post">
+                <input hidden id="idInput" type="text" name="@nameof(TicketInputModel.Id)" />
+                <input hidden id="quantityInput" type="number" name="@nameof(TicketInputModel.Quantity)" />
+
+                <div class="text-end">
+                    <button id="buyBtn" type="submit" disabled class="btn btn-primary ms-auto">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="buyBtnText"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 
@@ -70,3 +91,64 @@
         </div>
     </article>
 </div>
+
+@section Scripts {
+<script>
+     const ticketQuantityContainer = id('ticketQuantity');
+     const buyBtn = id('buyBtn');
+     const buyBtnText = id('buyBtnText');
+     const incrementQuantityBtn = id('incrementQuantityBtn');
+     const decrementQuantityBtn = id('decrementQuantityBtn');
+
+     const idInput = id('idInput');
+     const quantityInput = id('quantityInput');
+
+     let ticketQuantity = 1;
+     let currentTicketPrice = undefined;
+
+     updateBuyBtn(ticketQuantity);
+     ticketQuantityContainer.textContent = ticketQuantity;
+     quantityInput.value = ticketQuantity.toString();
+
+     function updateBuyBtn(quantity, price) {
+         const ticketName = quantity === 1 ? 'ticket' : 'tickets';
+
+         buyBtnText.textContent = `${quantity}x ${ticketName} - ${(quantity * (price ?? 0)).toFixed(2)}`;
+     }
+
+     incrementQuantityBtn.addEventListener('click', () => {
+         ticketQuantity++;
+
+         decrementQuantityBtn.toggleAttribute('disabled', false);
+
+         quantityInput.value = ticketQuantity.toString();
+         ticketQuantityContainer.textContent = ticketQuantity;
+         updateBuyBtn(ticketQuantity, currentTicketPrice);
+     });
+
+    decrementQuantityBtn.addEventListener('click', () => {
+         ticketQuantity--;
+
+         if (ticketQuantity <= 1) {
+             decrementQuantityBtn.toggleAttribute('disabled', true);
+             ticketQuantity = 1;
+         }
+
+         quantityInput.value = ticketQuantity.toString();
+         ticketQuantityContainer.textContent = ticketQuantity;
+         updateBuyBtn(ticketQuantity, currentTicketPrice);
+     });
+
+     document.addEventListener('click', function (e) {
+         const action = e.target.dataset.action;
+
+         if (action === 'selectTicket') {
+             idInput.value = e.target.value;
+             currentTicketPrice = Number(e.target.dataset.ticketPrice);
+
+             updateBuyBtn(ticketQuantity, currentTicketPrice);
+             buyBtn.toggleAttribute('disabled', false);
+         }
+     });
+</script>
+}

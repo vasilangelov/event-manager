@@ -10,6 +10,10 @@
 
         public const string EventImagesFolder = "Events";
 
+        public const string CartSessionKey = "Cart";
+
         public const string CaseInsensitiveDefaultCollation = "SQL_Latin1_General_CP1_CI_AS";
+
+        public static readonly TimeSpan SessionCookieIdleTimeout = TimeSpan.FromMinutes(30);
     }
 }

@@ -36,10 +36,17 @@
         </nav>
     </header>
     <div class="container">
-        @if (ViewData["Error"] is not null)
+        @if (TempData["Error"] is not null)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                @ViewData["Error"]
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Success"] is not null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }

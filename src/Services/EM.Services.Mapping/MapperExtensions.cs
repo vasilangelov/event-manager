@@ -86,7 +86,7 @@
                 {
                     instance.ConfigureMap(configuration);
 
-                    return;
+                    continue;
                 }
 
                 throw new InvalidOperationException(string.Format(ModelCreationExceptionMessage, customMap.Name));

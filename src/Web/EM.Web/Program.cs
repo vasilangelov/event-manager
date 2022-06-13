@@ -1,3 +1,4 @@
+using EM.Common;
 using EM.Data;
 using EM.Data.Infrastructure.Repositories;
 using EM.Data.Infrastructure.Repositories.EntityFramework;
@@ -36,6 +37,15 @@ builder.Services
     .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.IdleTimeout = GlobalConstants.SessionCookieIdleTimeout;
+});
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 
 builder.Services.AddAutoMapper(typeof(ErrorViewModel).Assembly);
@@ -54,7 +64,6 @@ await app.SeedDatabaseAsync();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -65,6 +74,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.UseEndpoints(routeBuilder =>
 {

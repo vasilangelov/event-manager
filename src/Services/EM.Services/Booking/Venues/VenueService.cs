@@ -41,8 +41,8 @@
 
             if (searchQuery is not null)
             {
-                query = query.Where(x => x.Name.StartsWith(searchQuery) ||
-                                         x.City.Name.StartsWith(searchQuery));
+                query = query.Where(x => x.Name.Contains(searchQuery) ||
+                                         x.City.Name.Contains(searchQuery));
             }
 
             return await query
@@ -58,8 +58,8 @@
 
             if (searchQuery is not null)
             {
-                query = query.Where(x => x.Name.StartsWith(searchQuery) ||
-                                         x.City.Name.StartsWith(searchQuery));
+                query = query.Where(x => x.Name.Contains(searchQuery) ||
+                                         x.City.Name.Contains(searchQuery));
             }
 
             var pageCount = await query.CountAsync();

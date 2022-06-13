@@ -35,9 +35,9 @@
 
             if (searchQuery is not null)
             {
-                query = query.Where(x => x.Name.StartsWith(searchQuery) ||
-                                         x.Venue.Name.StartsWith(searchQuery) ||
-                                         x.Venue.City.Name.StartsWith(searchQuery));
+                query = query.Where(x => x.Name.Contains(searchQuery) ||
+                                         x.Venue.Name.Contains(searchQuery) ||
+                                         x.Venue.City.Name.Contains(searchQuery));
             }
 
             return await query
@@ -54,9 +54,9 @@
 
             if (searchQuery is not null)
             {
-                query = query.Where(x => x.Name.StartsWith(searchQuery) ||
-                                         x.Venue.Name.StartsWith(searchQuery) ||
-                                         x.Venue.City.Name.StartsWith(searchQuery));
+                query = query.Where(x => x.Name.Contains(searchQuery) ||
+                                         x.Venue.Name.Contains(searchQuery) ||
+                                         x.Venue.City.Name.Contains(searchQuery));
             }
 
             var pageCount = await query.CountAsync();

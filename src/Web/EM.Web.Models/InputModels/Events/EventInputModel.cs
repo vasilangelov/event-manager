@@ -27,6 +27,7 @@
         public IFormFile Image { get; set; } = default!;
 
         [MinLength(1)]
+        [MaxLength(8)]
         public TicketInputModel[] Tickets { get; set; }
             = Array.Empty<TicketInputModel>();
     }
