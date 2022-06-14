@@ -12,6 +12,7 @@ using EM.Web.Extensions;
 using EM.Web.Models.ViewModels;
 
 using Microsoft.EntityFrameworkCore;
+using EM.Web.Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +74,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseMiddleware<NotFoundPageMiddleware>();
 
 app.UseRouting();
 
