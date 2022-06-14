@@ -2,6 +2,9 @@
 
 @if (User.Identity?.IsAuthenticated == true)
 {
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Tickets" asp-action="Active">Active tickets</a>
+    </li>
     @if (User.IsInRole(RoleConstants.Admin))
     {
         <li class="nav-item">

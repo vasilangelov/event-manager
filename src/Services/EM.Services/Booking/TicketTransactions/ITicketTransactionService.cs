@@ -1,6 +1,6 @@
-﻿namespace EM.Services.Booking.TicketPurchases
+﻿namespace EM.Services.Booking.TicketTransactions
 {
-    public interface ITicketPurchaseService
+    public interface ITicketTransactionService
     {
         Task<bool> IsTransactionFinished(string sessionId);
 

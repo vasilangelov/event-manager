@@ -19,6 +19,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Add([Bind(Prefix = null)] TicketInputModel ticket)
         {
             if (!this.ModelState.IsValid)

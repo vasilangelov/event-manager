@@ -20,6 +20,7 @@
             this.eventService = eventService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> All(int page = 1, int perPage = 10, string? searchQuery = null)
         {
             if (perPage <= 0 || perPage > 20)

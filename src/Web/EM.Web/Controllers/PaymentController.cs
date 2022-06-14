@@ -2,8 +2,8 @@
 {
     using System.Security.Claims;
 
-    using EM.Services.Booking.TicketPurchases;
     using EM.Services.Booking.Tickets;
+    using EM.Services.Booking.TicketTransactions;
     using EM.Services.Carts;
     using EM.Services.Payment;
     using EM.Services.Payment.Models;
@@ -21,12 +21,12 @@
         private readonly IStripeService stripeService;
         private readonly ICartService cartService;
         private readonly ITicketService ticketService;
-        private readonly ITicketPurchaseService ticketPurchaseService;
+        private readonly ITicketTransactionService ticketPurchaseService;
 
         public PaymentController(IStripeService stripeService,
                                  ICartService cartService,
                                  ITicketService ticketService,
-                                 ITicketPurchaseService ticketPurchaseService)
+                                 ITicketTransactionService ticketPurchaseService)
         {
             this.stripeService = stripeService;
             this.cartService = cartService;

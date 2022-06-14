@@ -13,5 +13,7 @@
         public const string CaseInsensitiveDefaultCollation = "SQL_Latin1_General_CP1_CI_AS";
 
         public static TimeSpan SessionCookieIdleTimeout { get; } = TimeSpan.FromMinutes(30);
+
+        public static TimeSpan DisplayTicketAfterExpiration { get; } = TimeSpan.FromMinutes(30);
     }
 }

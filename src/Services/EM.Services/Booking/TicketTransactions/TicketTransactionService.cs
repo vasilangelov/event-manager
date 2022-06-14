@@ -1,14 +1,13 @@
-﻿namespace EM.Services.Booking.TicketPurchases
+﻿namespace EM.Services.Booking.TicketTransactions
 {
     using Stripe;
     using Stripe.Checkout;
 
     using EM.Data.Infrastructure.Transactions;
     using System.Data;
-    using EM.Services.Booking.Tickets;
 
     [TransientService]
-    public class TicketPurchaseService : ITicketPurchaseService
+    public class TicketTransactionService : ITicketTransactionService
     {
         private readonly IRepository<TicketPurchase> ticketPurchaseRepository;
         private readonly IRepository<PurchaseTransaction> purchaseTransactionRepository;
@@ -16,11 +15,11 @@
         private readonly ITransactionManager transactionManager;
         private readonly StripeClient stripeClient;
 
-        public TicketPurchaseService(IRepository<TicketPurchase> ticketPurchaseRepository,
-                                     IRepository<PurchaseTransaction> purchaseTransactionRepository,
-                                     IRepository<Ticket> ticketRepository,
-                                     ITransactionManager transactionManager,
-                                     StripeClient stripeClient)
+        public TicketTransactionService(IRepository<TicketPurchase> ticketPurchaseRepository,
+                                        IRepository<PurchaseTransaction> purchaseTransactionRepository,
+                                        IRepository<Ticket> ticketRepository,
+                                        ITransactionManager transactionManager,
+                                        StripeClient stripeClient)
         {
             this.ticketPurchaseRepository = ticketPurchaseRepository;
             this.purchaseTransactionRepository = purchaseTransactionRepository;
