@@ -29,6 +29,15 @@
                             .ProjectTo<T>(this.mapper.ConfigurationProvider)
                             .FirstOrDefaultAsync();
 
+        public async Task<IEnumerable<T>> GetLatestEventsAsync<T>(int takeCount)
+            => await this.eventRepository
+                            .AllAsNoTracking()
+                            .Where(x => x.EventDate >= DateTime.UtcNow)
+                            .OrderByDescending(x => x.CreatedAt)
+                            .Take(takeCount)
+                            .ProjectTo<T>(this.mapper.ConfigurationProvider)
+                            .ToArrayAsync();
+
         public async Task<IEnumerable<T>> GetEventsAsync<T>(int page, int itemsPerPage, string? searchQuery = null)
         {
             var query = this.eventRepository.AllAsNoTracking().Where(x => x.EventDate >= DateTime.UtcNow);

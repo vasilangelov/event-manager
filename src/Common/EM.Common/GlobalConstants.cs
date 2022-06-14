@@ -4,6 +4,8 @@
     {
         public const long MaxImageSize = 2L * 1024 * 1024 * 1024;
 
+        public const int HomePageResponseCacheDuration = 5 * 60;
+
         public const byte PaginationDisplayPages = 5;
 
         public const string VenueImagesFolder = "Venues";

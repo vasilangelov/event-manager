@@ -1,8 +1,32 @@
-﻿@{
+﻿@using EM.Web.Models.ViewModels.Events
+
+@model IEnumerable<EventDisplayViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to Event Manager</h1>
+    <p>Find and attend to varous events.</p>
 </div>
+
+@if (Model.Any())
+{
+    <h2 class="text-center">Latest events</h2>
+
+    <div class="d-flex justify-content-center gap-3">
+        @foreach (var eventModel in Model)
+        {
+            <div class="card" style="width: 18rem;">
+                <img src="@eventModel.ImageUrl" class="card-img-top" alt="@eventModel.Name">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@eventModel.Name at @eventModel.VenueName</h5>
+                    <a class="btn btn-primary" asp-controller="Events" asp-action="Details" asp-route-id="@eventModel.Id">
+                        See more
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}

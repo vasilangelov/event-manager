@@ -48,6 +48,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = GlobalConstants.SessionCookieIdleTimeout;
 });
 
+builder.Services.AddResponseCaching();
+
 builder.Services.AddScoped<ITransactionManager, EntityFrameworkTransactionManager>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 
@@ -73,6 +75,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseResponseCaching();
+
 app.UseStaticFiles();
 
 app.UseMiddleware<NotFoundPageMiddleware>();

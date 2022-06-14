@@ -2,19 +2,33 @@
 {
     using System.Diagnostics;
 
+    using EM.Services.Booking.Events;
     using EM.Web.Models.ViewModels;
+    using EM.Web.Models.ViewModels.Events;
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static EM.Common.GlobalConstants;
+
     public class HomeController : Controller
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IEventService eventService;
+
+        public HomeController(IEventService eventService)
         {
-            return this.View();
+            this.eventService = eventService;
         }
 
-        public IActionResult NotFound()
+        [HttpGet]
+        [ResponseCache(Duration = HomePageResponseCacheDuration, Location = ResponseCacheLocation.Any, NoStore = false)]
+        public async Task<IActionResult> Index()
+        {
+            var model = await this.eventService.GetLatestEventsAsync<EventDisplayViewModel>(3);
+
+            return this.View(model);
+        }
+
+        public IActionResult PageNotFound()
         {
             return this.View();
         }
