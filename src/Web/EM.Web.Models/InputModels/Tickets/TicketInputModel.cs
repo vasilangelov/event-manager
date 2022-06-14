@@ -1,12 +1,14 @@
 ﻿namespace EM.Web.Models.InputModels.Tickets
 {
-    public class TicketInputModel
+    using EM.Services.Carts;
+
+    public class TicketInputModel : CartItem
     {
         [Required]
-        public Guid Id { get; set; }
+        public override Guid Id { get; set; }
 
         [Required]
         [Range(1, short.MaxValue)]
-        public short Quantity { get; set; }
+        public override short Quantity { get; set; }
     }
 }

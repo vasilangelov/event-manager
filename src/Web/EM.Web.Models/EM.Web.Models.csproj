@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\Common\EM.Common\EM.Common.csproj" />
     <ProjectReference Include="..\..\Data\EM.Data.Models\EM.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\EM.Services.Mapping\EM.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Services\EM.Services\EM.Services.csproj" />
     <ProjectReference Include="..\EM.Web.Infrastructure\EM.Web.Infrastructure.csproj" />
   </ItemGroup>
 

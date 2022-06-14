@@ -22,6 +22,8 @@
 
         public DbSet<TicketPurchase> TicketPurchases { get; set; } = default!;
 
+        public DbSet<PurchaseTransaction> PurchaseTransactions { get; set; } = default!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);

@@ -1,8 +1,7 @@
 ﻿namespace EM.Web.Controllers
 {
-    using EM.Common;
     using EM.Services.Booking.Tickets;
-    using EM.Web.Extensions;
+    using EM.Services.Carts;
     using EM.Web.Models.InputModels.Tickets;
     using EM.Web.Models.ViewModels.Tickets;
 
@@ -11,10 +10,12 @@
     public class CartController : Controller
     {
         private readonly ITicketService ticketService;
+        private readonly ICartService cartService;
 
-        public CartController(ITicketService ticketService)
+        public CartController(ITicketService ticketService, ICartService cartService)
         {
             this.ticketService = ticketService;
+            this.cartService = cartService;
         }
 
         [HttpPost]
@@ -22,28 +23,14 @@
         {
             if (!this.ModelState.IsValid)
             {
-                TempData["Error"] = "Could not add item to cart";
+                this.TempData["Error"] = "Could not add item to cart";
 
                 return this.Redirect(Request.Headers["Referer"].ToString());
             }
 
-            var cart = this.HttpContext.Session.Get<ICollection<TicketInputModel>>(GlobalConstants.CartSessionKey);
+            this.cartService.AddToCart(ticket);
 
-            if (cart is null)
-            {
-                cart = new List<TicketInputModel>
-                {
-                    ticket
-                };
-            }
-            else
-            {
-                cart.Add(ticket);
-            }
-
-            this.HttpContext.Session.Set(GlobalConstants.CartSessionKey, cart);
-
-            TempData["Success"] = "Items added to cart successfully";
+            this.TempData["Success"] = "Items added to cart successfully";
 
             return this.Redirect(Request.Headers["Referer"].ToString());
         }
@@ -51,19 +38,7 @@
         [HttpGet]
         public IActionResult Remove(Guid id)
         {
-            var cart = this.HttpContext.Session.Get<ICollection<TicketInputModel>>(GlobalConstants.CartSessionKey);
-
-            if (cart is not null)
-            {
-                var ticket = cart.FirstOrDefault(x => x.Id == id);
-
-                if (ticket is not null)
-                {
-                    cart.Remove(ticket);
-
-                    this.HttpContext.Session.Set(GlobalConstants.CartSessionKey, cart);
-                }
-            }
+            this.cartService.RemoveFromCart(id);
 
             return this.RedirectToAction(nameof(this.All));
         }
@@ -71,21 +46,18 @@
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var cartInfo = this.HttpContext.Session.Get<IEnumerable<TicketInputModel>>(GlobalConstants.CartSessionKey);
+            var cart = this.cartService.Cart;
 
-            if (cartInfo is null)
+            if (cart is null)
             {
                 return this.View();
             }
 
-            var cartIds = cartInfo?.Select(x => x.Id).ToArray();
-
-
-            var model = await this.ticketService.GetTickets<TicketViewModel>(cartIds);
+            var model = await this.ticketService.GetTicketsAsync<TicketViewModel>(cart.Keys);
 
             foreach (var element in model)
             {
-                element.Quantity = cartInfo!.First(x => x.Id == element.Id).Quantity;
+                element.Quantity = cart[element.Id].Quantity;
             }
 
             return this.View(model);

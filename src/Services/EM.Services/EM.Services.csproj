@@ -8,12 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="CloudinaryDotNet" Version="1.18.0" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.18.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
     <PackageReference Include="Scrutor" Version="4.2.0" />
+    <PackageReference Include="Stripe.net" Version="39.118.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\EM.Data\EM.Data.csproj" />
+    <ProjectReference Include="..\EM.Services.Mapping\EM.Services.Mapping.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,23 @@
+﻿@using EM.Web.Models.ViewModels.Payment
+
+@model PaymentStatusViewModel
+
+@{
+    string title = Model.Success ? "Payment Success" : "Payment Error";
+
+    ViewData["Title"] = title;
+}
+
+<h1 class="text-center">@title</h1>
+
+@if (Model.Success)
+{
+    <p class="text-center fs-3">Your payment has been processed successfully!</p>
+    <div class="text-center">
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Back to the Home Page</a>
+    </div>
+}
+else
+{
+    <p class="text-center fs-3">An error has occured processing your request, please try again <a href="@Model.RetryUrl">Here</a></p>
+}

@@ -25,7 +25,7 @@
         </div>
         <div class="border-top border-5 py-3 d-flex align-items-baseline justify-content-end mb-3 gap-3">
             <span class="fw-bold">Total: @Model.Aggregate(0m, (acc, cur) => acc + cur.Price * cur.Quantity).ToString("F2")</span>
-            <a class="btn btn-primary w-fit-content" asp-controller="Checkout" asp-action="Checkout">Checkout</a>
+            <a class="btn btn-primary w-fit-content" asp-controller="Payment" asp-action="Checkout">Checkout</a>
         </div>
     </div>
 }

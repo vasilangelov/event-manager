@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EM.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220612194746_Initial")]
+    [Migration("20220614172749_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -178,6 +178,24 @@ namespace EM.Data.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("EM.Data.Models.PurchaseTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId")
+                        .IsUnique();
+
+                    b.ToTable("PurchaseTransactions");
+                });
+
             modelBuilder.Entity("EM.Data.Models.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -207,10 +225,8 @@ namespace EM.Data.Migrations
 
             modelBuilder.Entity("EM.Data.Models.TicketPurchase", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TicketId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<short>("Amount")
@@ -219,9 +235,22 @@ namespace EM.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
 
-                    b.HasKey("UserId", "TicketId");
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("TicketId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TicketPurchases");
                 });
@@ -397,6 +426,12 @@ namespace EM.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EM.Data.Models.PurchaseTransaction", "Transaction")
+                        .WithMany("TicketPurchases")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EM.Data.Models.ApplicationUser", "User")
                         .WithMany("TicketPurchases")
                         .HasForeignKey("UserId")
@@ -404,6 +439,8 @@ namespace EM.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Ticket");
+
+                    b.Navigation("Transaction");
 
                     b.Navigation("User");
                 });
@@ -483,6 +520,11 @@ namespace EM.Data.Migrations
             modelBuilder.Entity("EM.Data.Models.Event", b =>
                 {
                     b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("EM.Data.Models.PurchaseTransaction", b =>
+                {
+                    b.Navigation("TicketPurchases");
                 });
 
             modelBuilder.Entity("EM.Data.Models.Ticket", b =>

@@ -62,6 +62,18 @@ namespace EM.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PurchaseTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SessionId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseTransactions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -236,18 +248,26 @@ namespace EM.Data.Migrations
                 name: "TicketPurchases",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<short>(type: "smallint", nullable: false),
-                    Price = table.Column<decimal>(type: "money", nullable: false)
+                    Price = table.Column<decimal>(type: "money", nullable: false),
+                    TransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TicketPurchases", x => new { x.UserId, x.TicketId });
+                    table.PrimaryKey("PK_TicketPurchases", x => x.Id);
                     table.ForeignKey(
                         name: "FK_TicketPurchases_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TicketPurchases_PurchaseTransactions_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "PurchaseTransactions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -313,9 +333,25 @@ namespace EM.Data.Migrations
                 column: "VenueId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PurchaseTransactions_SessionId",
+                table: "PurchaseTransactions",
+                column: "SessionId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TicketPurchases_TicketId",
                 table: "TicketPurchases",
                 column: "TicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketPurchases_TransactionId",
+                table: "TicketPurchases",
+                column: "TransactionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketPurchases_UserId",
+                table: "TicketPurchases",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_EventId",
@@ -358,6 +394,9 @@ namespace EM.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "PurchaseTransactions");
 
             migrationBuilder.DropTable(
                 name: "Tickets");

@@ -2,9 +2,12 @@ using EM.Common;
 using EM.Data;
 using EM.Data.Infrastructure.Repositories;
 using EM.Data.Infrastructure.Repositories.EntityFramework;
+using EM.Data.Infrastructure.Transactions.EntityFramework;
+using EM.Data.Infrastructure.Transactions;
 using EM.Data.Models;
 using EM.Services;
 using EM.Services.Mapping;
+using EM.Services.Payment.Dtos;
 using EM.Web.Extensions;
 using EM.Web.Models.ViewModels;
 
@@ -37,8 +40,6 @@ builder.Services
     .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddDistributedMemoryCache();
-
 builder.Services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -46,11 +47,14 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = GlobalConstants.SessionCookieIdleTimeout;
 });
 
+builder.Services.AddScoped<ITransactionManager, EntityFrameworkTransactionManager>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 
-builder.Services.AddAutoMapper(typeof(ErrorViewModel).Assembly);
+builder.Services.AddAutoMapper(typeof(ErrorViewModel).Assembly, typeof(TicketDto).Assembly);
 
 builder.Services.AddCloudinary(builder.Configuration);
+
+builder.Services.AddStripe(builder.Configuration);
 
 builder.Services.AddServiceLayer();
 #endregion

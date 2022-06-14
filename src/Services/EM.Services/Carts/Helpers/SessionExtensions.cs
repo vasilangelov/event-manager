@@ -1,8 +1,10 @@
-﻿namespace EM.Web.Extensions
+﻿namespace EM.Services.Carts.Helpers
 {
     using System.Text.Json;
 
-    public static class SessionExtensions
+    using Microsoft.AspNetCore.Http;
+
+    internal static class SessionExtensions
     {
         public static void Set<T>(this ISession session, string key, T value)
         {

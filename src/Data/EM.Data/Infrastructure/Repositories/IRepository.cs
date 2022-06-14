@@ -9,7 +9,7 @@
 
         IQueryable<T> AllAsNoTracking();
 
-        Task<T?> FindById(object id);
+        Task<T?> FindByIdAsync(object id);
 
         Task AddAsync(T item);
 

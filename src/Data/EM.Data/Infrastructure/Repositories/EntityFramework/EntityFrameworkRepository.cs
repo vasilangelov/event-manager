@@ -26,7 +26,7 @@
         public IQueryable<T> AllAsNoTracking()
             => this.dbSet.AsNoTracking();
 
-        public async Task<T?> FindById(object id)
+        public async Task<T?> FindByIdAsync(object id)
             => await this.dbSet.FindAsync(id);
 
         public async Task AddAsync(T item)

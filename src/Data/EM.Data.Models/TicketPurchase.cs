@@ -2,6 +2,8 @@
 {
     public class TicketPurchase
     {
+        public Guid Id { get; set; }
+
         public Guid UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; } = default!;
@@ -14,5 +16,9 @@
 
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
+
+        public Guid TransactionId { get; set; } = default!;
+
+        public virtual PurchaseTransaction Transaction { get; set; } = default!;
     }
 }
