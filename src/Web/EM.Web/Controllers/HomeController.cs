@@ -20,7 +20,7 @@
         }
 
         [HttpGet]
-        [ResponseCache(Duration = HomePageResponseCacheDuration, Location = ResponseCacheLocation.Any, NoStore = false)]
+        [ResponseCache(Duration = HomePageResponseCacheDuration, VaryByHeader = "Cookie")]
         public async Task<IActionResult> Index()
         {
             var model = await this.eventService.GetLatestEventsAsync<EventDisplayViewModel>(3);

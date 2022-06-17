@@ -6,6 +6,8 @@
     ViewData["Title"] = "Active tickets";
 }
 
+<h1 class="text-center">Active tickets</h1>
+
 @if (Model.Any())
 {
     @foreach (var ticket in Model)
@@ -39,5 +41,5 @@
 }
 else
 {
-
+    <div class="fs-4 text-center">It seems that you do not have tickets for upcoming events...</div>
 }

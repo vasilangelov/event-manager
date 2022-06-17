@@ -10,6 +10,8 @@
 
         public int ItemsPerPage { get; set; }
 
+        public string? SearchQuery { get; set; }
+
         public IEnumerable<TModel> Items { get; set; }
             = Enumerable.Empty<TModel>();
     }

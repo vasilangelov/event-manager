@@ -20,7 +20,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(int page = 1, int perPage = 10, string? searchQuery = null)
+        public async Task<IActionResult> All(int page = 1, int perPage = 5, string? searchQuery = null)
         {
             if (perPage <= 0 || perPage > 20)
             {
@@ -36,8 +36,6 @@
 
             var venues = await this.venueService.GetVenuesAsync<VenueListViewModel>(page, perPage, searchQuery);
 
-            this.ViewData["SearchQuery"] = searchQuery;
-
             var model = new PaginationViewModel<VenueListViewModel>
             {
                 Items = venues,
@@ -45,6 +43,7 @@
                 CurrentPage = page,
                 DisplayPageCount = GlobalConstants.PaginationDisplayPages,
                 ItemsPerPage = perPage,
+                SearchQuery = searchQuery,
             };
 
             return this.View(model);

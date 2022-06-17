@@ -10,14 +10,14 @@
 
 <form class="col-12 col-md-6 mx-auto" asp-controller="Venues" asp-action="All" method="get">
     <div class="col-md-6 mx-auto input-group">
-        <input class="form-control" placeholder="Search by name or city..." type="text" name="searchQuery" value="@ViewData["SearchQuery"]" />
+        <input class="form-control" placeholder="Search by name or city..." type="text" name="searchQuery" value="@Model.SearchQuery" />
         <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
     </div>
 </form>
 
-@if (ViewData["SearchQuery"] is not null)
+@if (Model.SearchQuery is not null)
 {
-    <p class="fs-3 text-center">Results for "@ViewData["SearchQuery"]"</p>
+    <p class="fs-3 text-center">Results for "@Model.SearchQuery"</p>
 }
 
 <div class="container my-3 p-0">
@@ -70,12 +70,11 @@
             {
                 <li class="page-item">
                     <a class="page-link"
-               asp-area="Admin"
                asp-controller="Venues"
                asp-action="All"
                asp-route-page="@pageIndex"
                asp-route-perPage="@Model.ItemsPerPage"
-               asp-route-name="@ViewData["SearchQuery"]">
+               asp-route-searchQuery="@Model.SearchQuery">
                         @pageIndex
                     </a>
                 </li>

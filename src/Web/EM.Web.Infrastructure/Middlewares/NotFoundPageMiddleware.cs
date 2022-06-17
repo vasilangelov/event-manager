@@ -17,7 +17,7 @@
 
             if (httpContext.Response.StatusCode == 404)
             {
-                httpContext.Request.Path = "/Home/NotFound";
+                httpContext.Request.Path = "/Home/PageNotFound";
 
                 await this.next(httpContext);
             }

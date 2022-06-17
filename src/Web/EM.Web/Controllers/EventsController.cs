@@ -21,7 +21,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(int page = 1, int perPage = 10, string? searchQuery = null)
+        public async Task<IActionResult> All(int page = 1, int perPage = 5, string? searchQuery = null)
         {
             if (perPage <= 0 || perPage > 20)
             {
@@ -37,8 +37,6 @@
 
             var events = await this.eventService.GetEventsAsync<EventListViewModel>(page, perPage, searchQuery);
 
-            this.ViewData["SearchQuery"] = searchQuery;
-
             var model = new PaginationViewModel<EventListViewModel>
             {
                 Items = events,
@@ -46,6 +44,7 @@
                 CurrentPage = page,
                 DisplayPageCount = GlobalConstants.PaginationDisplayPages,
                 ItemsPerPage = perPage,
+                SearchQuery = searchQuery,
             };
 
             return this.View(model);
